@@ -25,11 +25,15 @@
       keep-derivations = true
     '';
 
-    # public binary cache that I use for all my derivations. You can keep
-    # this, use your own, or toss it. Its typically safe to use a binary cache
-    # since the data inside is checksummed.
-    binaryCaches = ["https://nix-community.cachix.org" "https://cache.nixos.org/"];
-    binaryCachePublicKeys = ["nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="];
+    settings = {
+      substituters = [
+        "https://nix-community.cachix.org"
+        "https://cache.nixos.org/"
+      ];
+      trusted-public-keys = [
+        "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+      ];
+    };
   };
 
   # We expect to run the VM on hidpi machines.
@@ -81,6 +85,7 @@
     gnumake
     killall
     parted
+    mutagen
   ];
 
   programs.mtr.enable = true;
@@ -95,7 +100,7 @@
   networking.firewall.enable = false;
 
   # Setup qemu so we can run x86_64 binaries
-  boot.binfmt.emulatedSystems = ["x86_64-linux"];
+  boot.binfmt.emulatedSystems = [ "x86_64-linux" ];
 
   # Disable the default module and import our override. We have
   # customizations to make this work on aarch64.
@@ -123,7 +128,7 @@
     isNormalUser = true;
     home = "/home/developer";
     extraGroups = [ "networkmanager" "wheel" "docker" ];
-    shell = pkgs.fish;
+    shell = pkgs.bashInteractive;
     hashedPassword = "$5$gKj78DetZb1oimOD$hGOEvmfZMPKTmmVXK7qN78uZ2Y2nwEFwYI2LDt0hXV6";
     openssh.authorizedKeys.keys = [ (builtins.readFile ./ssh/id_rsa.pub) ];
   };

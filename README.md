@@ -91,7 +91,15 @@ After restarting the installation is complete. Shut down the VM and disconnect t
 
 ## Usage
 
-### Updating
+### SSH Access
+
+The `make iso` command creates creates an `./ssh/id_rsa` file which can be used to access the VM.
+
+```bash
+$ ssh -i ./ssh/id_rsa developer@192.168.1.99
+```
+
+### Updating the NixOS Virtual Machine
 
 Update the [`./configuration.nix`](configuration.nix) file.
 
@@ -102,15 +110,15 @@ $ export NIXADDR=192.168.1.99
 $ make update
 ```
 
-### SSH Access
+### Code Formatting
 
-The `make iso` command creates creates an `./ssh/id_rsa` file which can be used to access the VM.
+In your local terminal run `make format`.
 
 ```bash
-$ ssh -i ./ssh/id_rsa developer@192.168.1.99
+$ make format
 ```
 
-### Password
+### Passwords
 
 To update the default `developer` user password copy the output of a sha512 hash from `mkpasswd` into `users.users.developer.hashedPassword`.
 

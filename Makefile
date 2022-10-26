@@ -59,4 +59,6 @@ update:
 			sudo NIXPKGS_ALLOW_UNSUPPORTED_SYSTEM=1 nixos-rebuild switch --flake \"/nix-config#nixos\"; \
 			sudo reboot; \
 		"
-	
+
+format:
+	docker run -v $(shell pwd):/build --rm -t nixos-builder:latest nixpkgs-fmt /build

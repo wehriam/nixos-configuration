@@ -11,14 +11,15 @@
   };
 
   outputs = { self, nixpkgs, flake-utils, nixos-generators }: flake-utils.lib.eachDefaultSystem (system:
-   
+
     let
 
-      pkgs = import nixpkgs { 
+      pkgs = import nixpkgs {
         inherit system;
       };
 
-    in {
+    in
+    {
 
       packages.default = nixos-generators.nixosGenerate {
         system = system;

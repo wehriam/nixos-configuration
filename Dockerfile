@@ -2,6 +2,8 @@ FROM nixos/nix
 
 RUN nix-channel --update
 
+RUN nix-env -i nixpkgs-fmt
+
 RUN echo 'experimental-features = nix-command flakes' >> /etc/nix/nix.conf
 
 WORKDIR /build
