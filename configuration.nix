@@ -67,12 +67,20 @@
   # Select internationalisation properties.
   i18n.defaultLocale = "en_US.UTF-8";
 
-  programs.dconf.enable = true;
 
-  services = {
-    dbus.packages = with pkgs; [
-      dconf
-    ];
+  systemd.services = {
+    mutagen = {
+      enable = true;
+      description = "Mutagen Daemon";
+      unitConfig = {
+        Type = "simple";
+      };
+      serviceConfig = {
+        ExecStart = "${pkgs.mutagen}/bin/mutagen daemon start";
+        ExecStart = "${pkgs.mutagen}/bin/mutagen daemon stop";
+      };
+      wantedBy = [ "multi-user.target" ];
+    };
   };
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
