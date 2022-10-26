@@ -12,19 +12,19 @@ $ make iso
 
 Create a new virtual machine in VMware.
 
-![Select Installation Method](https://raw.githubusercontent.com/wehriam/nixos-configuration/main/.github/images/01-select-installation-method.png)
+![Select Installation Method](images/01-select-installation-method.png?raw=true)
 
 Drag the `./iso/nixos.iso` image onto the installer window.
 
-![Create a New Virtual Machine](https://raw.githubusercontent.com/wehriam/nixos-configuration/main/.github/images/02-create-a-new-virtual-machine.png)
+![Create a New Virtual Machine](images/02-create-a-new-virtual-machine.png?raw=true)
 
 Choose the **Linux > Other Linux 5.x kernel 64-bit ARM** option.
 
-![Choose Operating System](https://raw.githubusercontent.com/wehriam/nixos-configuration/main/.github/images/03-choose-operating-system.png)
+![Choose Operating System](images/03-choose-operating-system.png?raw=true)
 
 Click **Customize Settings**.
 
-![Finish](https://raw.githubusercontent.com/wehriam/nixos-configuration/main/.github/images/04-finish.png)
+![Finish](images/04-finish.png?raw=true)
 
 Recommended Settings:
 
@@ -44,7 +44,7 @@ Recommended Settings:
 
 Start the virtual machine and let it complete the automatic installation process.
 
-![Login Prompt](https://raw.githubusercontent.com/wehriam/nixos-configuration/main/.github/images/04-login-prompt.png)
+![Login Prompt](images/04-login-prompt.png?raw=true)
 
 Login with username `developer` and password `developer` then type **`ifconfig`** to get the assigned IP address.
 
@@ -80,7 +80,7 @@ lo: flags=73<UP,LOOPBACK,RUNNING>  mtu 65536
 
 In your local terminal, export the `NIXADDR` environment variable to the IP address of the virtual machine (in the example above the IP is `192.168.1.99`) and start the bootstrap procedure.
 
-The bootstrap procedure partitions the drive and installs NixOS using the settings in [`./configuration.nix`](https://github.com/wehriam/nixos-configuration/blob/main/configuration.nix).
+The bootstrap procedure partitions the drive and installs NixOS using the settings in [`./configuration.nix`](configuration.nix).
 
 ```bash
 $ export NIXADDR=192.168.1.99
@@ -93,7 +93,7 @@ After restarting the installation is complete. Shut down the VM and disconnect t
 
 ### Updating
 
-Update the [`./configuration.nix`](https://github.com/wehriam/nixos-configuration/blob/main/configuration.nix).
+Update the [`./configuration.nix`](configuration.nix).
 
 In your local terminal, export the `NIXADDR` environment variable to the IP address of the virtual machine then run `make update`.
 
