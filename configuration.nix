@@ -87,7 +87,7 @@
 
   # Enable the OpenSSH daemon.
   services.openssh.enable = true;
-  services.openssh.passwordAuthentication = true;
+  services.openssh.passwordAuthentication = false;
   services.openssh.permitRootLogin = "no";
 
   # Disable the firewall since we're in a VM and we want to make it
