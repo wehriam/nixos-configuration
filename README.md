@@ -44,7 +44,7 @@ Recommended Settings:
 
 Start the virtual machine and let it complete the automatic installation process.
 
-![Login Prompt](images/04-login-prompt.png?raw=true)
+![Login Prompt](images/05-login-prompt.png?raw=true)
 
 Login with username `developer` and password `developer` then type **`ifconfig`** to get the assigned IP address.
 
@@ -93,7 +93,7 @@ After restarting the installation is complete. Shut down the VM and disconnect t
 
 ### Updating
 
-Update the [`./configuration.nix`](configuration.nix).
+Update the [`./configuration.nix`](configuration.nix) file.
 
 In your local terminal, export the `NIXADDR` environment variable to the IP address of the virtual machine then run `make update`.
 
@@ -104,7 +104,7 @@ $ make update
 
 ### SSH Access
 
-The `make iso` creates creates an `./ssh/id_rsa` file which can be used to access the VM.
+The `make iso` command creates creates an `./ssh/id_rsa` file which can be used to access the VM.
 
 ```bash
 $ ssh -i ./ssh/id_rsa developer@192.168.1.99
