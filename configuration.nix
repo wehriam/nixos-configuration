@@ -23,6 +23,7 @@
       experimental-features = nix-command flakes
       keep-outputs = true
       keep-derivations = true
+      sandbox = false
     '';
 
     settings = {
@@ -70,16 +71,41 @@
 
   systemd.services = {
     mutagen = {
-      enable = true;
       description = "Mutagen Daemon";
-      unitConfig = {
-        Type = "simple";
-      };
-      serviceConfig = {
-        ExecStart = "${pkgs.mutagen}/bin/mutagen daemon start";
-        ExecStart = "${pkgs.mutagen}/bin/mutagen daemon stop";
-      };
+      enable = true;
+      after = [ "multi-user.target" ];
       wantedBy = [ "multi-user.target" ];
+      wants = [ "sshd.service" ];
+      environment = {
+        HOME = "/home/developer";
+      };
+      path = [
+        pkgs.mutagen
+      ];
+      serviceConfig = {
+        Type = "forking";
+        User = config.users.users.developer.name;
+        ExecStart = "${pkgs.mutagen}/bin/mutagen daemon start";
+        ExecStop = "${pkgs.mutagen}/bin/mutagen daemon stop";
+      };
+    };
+    moto = {
+      description = "Moto Daemon";
+      enable = true;
+      after = [ "multi-user.target" ];
+      wantedBy = [ "multi-user.target" ];
+      wants = [ ];
+      environment = {
+        HOME = "/home/developer";
+      };
+      path = [
+        pkgs.python3Packages.moto
+      ];
+      serviceConfig = {
+        Type = "simple";
+        User = config.users.users.developer.name;
+        ExecStart = "${pkgs.python3Packages.moto}/bin/moto_server";
+      };
     };
   };
 
@@ -94,6 +120,13 @@
     killall
     parted
     mutagen
+    git
+    terraform
+    yarn
+    nodejs
+    jq
+    python3Packages.moto
+    awscli
   ];
 
   programs.mtr.enable = true;
@@ -123,6 +156,19 @@
 
   # This works through our custom module imported above
   virtualisation.vmware.guest.enable = true;
+
+  fileSystems."/host" = {
+    fsType = "fuse./run/current-system/sw/bin/vmhgfs-fuse";
+    device = ".host:/";
+    options = [
+      "umask=22"
+      "uid=1000"
+      "gid=1000"
+      "allow_other"
+      "auto_unmount"
+      "defaults"
+    ];
+  };
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions

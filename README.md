@@ -99,6 +99,19 @@ The `make iso` command creates creates an `./ssh/id_rsa` file which can be used 
 $ ssh -i ./ssh/id_rsa developer@192.168.1.99
 ```
 
+You may want to add a `~/.ssh/config` block.
+
+```bash
+Host nixos
+    HostName 192.168.1.57
+    User developer
+    IdentityFile ~/Projects/nixos-configuration/ssh/id_rsa
+```
+
+```bash
+$ ssh nixos
+```
+
 ### Updating the NixOS Virtual Machine
 
 Update the [`./configuration.nix`](configuration.nix) file.

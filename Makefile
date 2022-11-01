@@ -1,4 +1,4 @@
-NIXADDR ?= unset
+NIXADDR ?= nixos
 
 iso:
 	echo ""
@@ -57,7 +57,6 @@ update:
 		-o StrictHostKeyChecking=no \
 		developer@$(NIXADDR) \ " \
 			sudo NIXPKGS_ALLOW_UNSUPPORTED_SYSTEM=1 nixos-rebuild switch --flake \"/nix-config#nixos\"; \
-			sudo reboot; \
 		"
 
 format:
