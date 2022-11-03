@@ -1,5 +1,11 @@
 { config, pkgs, ... }:
+let
 
+  moto-reset = pkgs.writeShellScriptBin "moto-reset" ''
+    curl -XPOST http://127.0.0.1:5000/moto-api/reset -s | jq '.status' -r
+  '';
+
+in
 {
 
   imports = [
@@ -127,6 +133,8 @@
     jq
     python3Packages.moto
     awscli
+    moto-reset
+    vim
   ];
 
   programs.mtr.enable = true;
