@@ -1,10 +1,7 @@
 { config, pkgs, ... }:
 let
 
-  moto-reset = pkgs.writeShellScriptBin "moto-reset" ''
-    curl -XPOST http://127.0.0.1:5000/moto-api/reset -s | jq '.status' -r
-  '';
-
+ 
 in
 {
 
@@ -59,6 +56,7 @@ in
 
   # Define your hostname.
   networking.hostName = "nixos";
+  networking.firewall.allowedTCPPorts = [];
 
   # Set your time zone.
   time.timeZone = "America/New_York";
@@ -98,24 +96,6 @@ in
         ExecStop = "${pkgs.mutagen}/bin/mutagen daemon stop";
       };
     };
-    moto = {
-      description = "Moto Daemon";
-      enable = true;
-      after = [ "multi-user.target" ];
-      wantedBy = [ "multi-user.target" ];
-      wants = [ ];
-      environment = {
-        HOME = "/home/developer";
-      };
-      path = [
-        pkgs.python3Packages.moto
-      ];
-      serviceConfig = {
-        Type = "simple";
-        User = config.users.users.developer.name;
-        ExecStart = "${pkgs.python3Packages.moto}/bin/moto_server";
-      };
-    };
   };
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
@@ -134,9 +114,7 @@ in
     yarn
     nodejs
     jq
-    python3Packages.moto
     awscli
-    moto-reset
     vim
   ];
 
@@ -146,6 +124,36 @@ in
   services.openssh.enable = true;
   services.openssh.passwordAuthentication = false;
   services.openssh.permitRootLogin = "no";
+
+  services.postgresql = {
+    enable = true;
+    package = pkgs.postgresql;
+    enableTCPIP = true;
+    authentication = pkgs.lib.mkOverride 10 ''
+      local all all trust
+      host all all 127.0.0.1/32 trust
+      host all all ::1/128 trust
+    '';
+    initialScript = pkgs.writeText "backend-initScript" ''
+      CREATE USER developer WITH SUPERUSER PASSWORD 'developer';
+      CREATE DATABASE developer;
+    '';
+  };
+
+environment.sessionVariables = rec {
+    XDG_CACHE_HOME  = "\${HOME}/.cache";
+    XDG_CONFIG_HOME = "\${HOME}/.config";
+    XDG_BIN_HOME    = "\${HOME}/.local/bin";
+    XDG_DATA_HOME   = "\${HOME}/.local/share";
+
+    PATH = [ 
+      "\${XDG_BIN_HOME}"
+    ];
+    PGHOST = "localhost";
+    PGUSER = "developer";
+    PGPASSWORD = "developer";
+    PGDATABASE = "developer";
+  };
 
   # Disable the firewall since we're in a VM and we want to make it
   # easy to visit stuff in here. We only use NAT networking anyways.
